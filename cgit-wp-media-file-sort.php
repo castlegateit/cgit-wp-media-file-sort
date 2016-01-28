@@ -16,39 +16,27 @@ with modifications to avoid naming collisions.
 */
 
 /**
- * Add column to media library
- */
-function cgit_mfs_filename_column($cols) {
-    $cols['filename'] = 'File name';
-    return $cols;
-}
-
-/**
- * Display file names in column
- *
- * This function extracts the file name from the attachment URL because
- * WordPress stores the file URL, not the file name.
- */
-function cgit_mfs_filename_value($column_name, $id) {
-    $meta = wp_get_attachment_metadata($id);
-    echo substr(strrchr($meta['file'], '/' ), 1);
-}
-
-/**
- * Allow sorting by file name column
- */
-function cgit_mfs_filename_column_sortable($cols) {
-    $cols['filename'] = 'name';
-    return $cols;
-}
-
-/**
  * Add to init action
  */
-function cgit_mfs_filename_action() {
-    add_filter('manage_media_columns', 'cgit_mfs_filename_column');
-    add_action('manage_media_custom_column', 'cgit_mfs_filename_value', 10, 2);
-    add_filter('manage_upload_sortable_columns', 'cgit_mfs_filename_column_sortable');
-}
+add_action('admin_init', function() {
 
-add_action('admin_init', 'cgit_mfs_filename_action');
+    // Add column to media library
+    add_filter('manage_media_columns', function($cols) {
+        $cols['filename'] = 'File name';
+        return $cols;
+    });
+
+    // Display file names in column
+    //
+    // WordPress stores the file URL, not the file name
+    add_action('manage_media_custom_column', function($column_name, $id) {
+        $meta = wp_get_attachment_metadata($id);
+        echo substr(strrchr($meta['file'], '/' ), 1);
+    }, 10, 2);
+
+    // Allow sorting by file name column
+    add_filter('manage_upload_sortable_columns', function($cols) {
+        $cols['filename'] = 'name';
+        return $cols;
+    });
+});
