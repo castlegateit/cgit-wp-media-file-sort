@@ -8,7 +8,7 @@ Description: Allow media library to be sorted by file name.
 Version: 1.1
 Author: Castlegate IT
 Author URI: http://www.castlegateit.co.uk/
-License: MIT
+License: AGPL
 
 */
 
